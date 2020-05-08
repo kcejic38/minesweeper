@@ -1,0 +1,19 @@
+html,
+body {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.minesweeper-grid {
+  border-collapse: collapse;
+}
+
+.minesweeper-cell {
+  border: 1px solid black;
+  height: 40px;
+  width: 40px;
+  background-image: url(http://i.imgur.com/HM1e3Tbb.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
