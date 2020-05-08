@@ -17,3 +17,7 @@ body {
   background-position: center center;
   background-size: cover;
 }
+
+.opened {
+  background-image: url(http://i.imgur.com/Flqdqi1b.jpg);
+}
