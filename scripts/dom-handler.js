@@ -1,15 +1,3 @@
-const CLASSES = {
-  CELL: 'minesweeper-cell',
-  ROW: 'minesweeper-row',
-  GRID: 'minesweeper-grid',
-};
-
-const CELL_CONTENTS = {
-  BOMB: 1,
-  EMPTY: 0,
-  VISITED: 9,
-};
-
 class DomHandler {
   game = null;
   gameRootElement = document.getElementById('minesweeper-app');
@@ -17,7 +5,7 @@ class DomHandler {
   constructor(game) {
     this.game = game;
     this._addGridToDom();
-    this._setUpEventHandlers();
+    // this._setUpEventHandlers();
     console.log(this.game);
   }
 
@@ -35,6 +23,12 @@ class DomHandler {
         cellEl.className = CLASSES.CELL;
         cellEl.setAttribute('data-row', rowIndex);
         cellEl.setAttribute('data-col', colIndex);
+
+        if (cell.isEmpty()) {
+          cellEl.classList.add(`${CLASSES.BOMB_COUNT}-${cell.adjacentBombsCount}`);
+        } else {
+          cellEl.classList.add(CLASSES.BOMB_EXPOSED);
+        }
         rowEl.appendChild(cellEl);
       });
     });
@@ -55,7 +49,8 @@ class DomHandler {
       if (grid[row][col] === CELL_CONTENTS.BOMB) {
         clickedElement.style.backgroundImage = `url(${icons.explodedBomb})`;
       } else if (grid[row][col] === CELL_CONTENTS.EMPTY) {
-        this._uncoverAllContinuesBlankCells(row, col);
+        clickedElement.style.backgroundImage = `url(${icons.bombs[0]})`;
+        this._uncoverAllContinuousBlankCells(row, col);
       } else {
         clickedElement.style.backgroundImage = `url(${icons.blank})`;
       }
@@ -73,20 +68,26 @@ class DomHandler {
   _uncoverAllContinuousBlankCells(row, col) {
     const { grid } = this.game;
 
+    /* For performance reasons we want to perform
+     * DFS on our in-memory grid, and not on DOM directly.
+     * Once we land on empty cell, we update its corresponding
+     * "twin" in the DOM, based on their shared coordinates.
+     */
     const DFS = (row, col) => {
       console.log(row, col);
       const currentCell = grid[row] ? grid[row][col] : undefined;
-      if (currentCell === CELL_CONTENTS.EMPTY) {
-        grid[row][col] = CELL_CONTENTS.VISITED;
-        const cellEl = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-        cellEl.classList.add('opened');
-
-        DFS(row - 1, col); // up
-        DFS(row, col + 1); // right
-        DFS(row + 1, col); // down
-        DFS(row, col - 1); // left
+      if (currentCell !== CELL_CONTENTS.EMPTY) {
+        return;
       }
+      grid[row][col] = CELL_CONTENTS.VISITED;
+      const cellEl = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+      cellEl.classList.add('opened');
+
+      DFS(row - 1, col); // up
+      DFS(row, col + 1); // right
+      DFS(row + 1, col); // down
+      DFS(row, col - 1); // left
     };
-    DFS(Number(row), Number(col));
+    // DFS(Number(row), Number(col));
   }
 }

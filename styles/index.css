@@ -12,7 +12,7 @@ body {
   border: 1px solid black;
   height: 40px;
   width: 40px;
-  background-image: url(http://i.imgur.com/HM1e3Tbb.jpg);
+  /* background-image: url(http://i.imgur.com/HM1e3Tbb.jpg); */
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -20,4 +20,49 @@ body {
 
 .opened {
   background-image: url(http://i.imgur.com/Flqdqi1b.jpg);
+}
+
+.flagged {
+  background-image: url(http://i.imgur.com/nLPvW15b.jpg);
+}
+
+.bomb-exposed {
+  background-image: url(http://i.imgur.com/pTJ8Swhb.jpg);
+}
+
+.bomb-exploded {
+  background-image: url(http://i.imgur.com/UFmXprFb.jpg);
+}
+
+.bomb-count-0 {
+  background-image: url(http://i.imgur.com/Flqdqi1b.jpg);
+}
+
+.bomb-count-1 {
+  background-image: url(http://i.imgur.com/bM8oExob.jpg);
+}
+
+.bomb-count-2 {
+  background-image: url(http://i.imgur.com/bQKSbqYb.jpg);
+}
+.bomb-count-3 {
+  background-image: url(http://i.imgur.com/5jNcEeVb.jpg);
+}
+.bomb-count-4 {
+  background-image: url(http://i.imgur.com/BnxjHgHb.jpg);
+}
+
+.bomb-count-5 {
+  background-image: url(http://i.imgur.com/RaFrMYcb.jpg);
+}
+.bomb-count-6 {
+  background-image: url(http://i.imgur.com/GlwQOy0b.jpg);
+}
+
+.bomb-count-7 {
+  background-image: url(http://i.imgur.com/8ngsVa8b.jpg);
+}
+
+.bomb-count-8 {
+  background-image: url(http://i.imgur.com/lJ8P1wab.jpg);
 }
