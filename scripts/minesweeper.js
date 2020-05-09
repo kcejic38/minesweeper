@@ -4,6 +4,7 @@ class GridCell {
     this.col = col;
     this.value = CELL_CONTENTS.EMPTY;
     this.adjacentBombsCount = 0;
+    this.fieldOpened = false;
   }
 }
 
@@ -11,18 +12,34 @@ GridCell.prototype.incementBombCount = function () {
   this.adjacentBombsCount++;
 };
 
+GridCell.prototype.opened = function () {
+  this.fieldOpened = true;
+};
+GridCell.prototype.isVisited = function () {
+  return this.fieldOpened === true;
+};
+
 GridCell.prototype.isEmpty = function () {
   return this.value === CELL_CONTENTS.EMPTY;
+};
+GridCell.prototype.isBomb = function () {
+  return this.value === CELL_CONTENTS.BOMB;
+};
+GridCell.prototype.hasAdjacentBombs = function () {
+  return this.adjacentBombsCount > 0;
 };
 
 class Minesweeper {
   gridSize = 0;
   numberOfMines = 0;
+  numberOfSafeCells = 0;
+  numberOfVisitedCells = 0;
   grid = null;
 
   constructor(gridSize, numberOfMines) {
     this.gridSize = gridSize;
     this.numberOfMines = numberOfMines;
+    this.numberOfSafeCells = gridSize * gridSize - numberOfMines;
     this._createGrid();
     this._randomlyPlaceMines();
   }
@@ -63,5 +80,13 @@ class Minesweeper {
         }
       }
     }
+  }
+
+  openCell(cell) {
+    cell.opened();
+    this.numberOfVisitedCells++;
+  }
+  checkForWin() {
+    return this.numberOfVisitedCells === this.numberOfSafeCells;
   }
 }
