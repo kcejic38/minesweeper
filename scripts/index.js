@@ -5,6 +5,8 @@ const CLASSES = {
   BOMB_EXPOSED: 'bomb-exposed',
   BOMB_EXPLODED: 'bomb-exposed',
   BOMB_COUNT: 'bomb-count',
+  OPENED_BLANK_CELL: 'opened-blank-cell',
+  CELL_PRESSED: 'cell-pressed',
 };
 
 const CELL_CONTENTS = {

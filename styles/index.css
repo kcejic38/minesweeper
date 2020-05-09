@@ -18,8 +18,12 @@ body {
   background-size: cover;
 }
 
-.opened {
+.opened-blank-cell {
   background-image: url(http://i.imgur.com/Flqdqi1b.jpg);
+}
+
+.cell-pressed {
+  background-image: url(http://i.imgur.com/bGT8xGEb.jpg);
 }
 
 .flagged {

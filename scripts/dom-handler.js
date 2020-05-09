@@ -42,17 +42,18 @@ class DomHandler {
       if (!clickedElement.classList.contains(CLASSES.CELL)) {
         return;
       }
+      cellEl.classList.remove(CLASSES.CELL_PRESSED);
 
       const { row, col } = clickedElement.dataset;
       const { grid } = this.game;
 
       if (grid[row][col] === CELL_CONTENTS.BOMB) {
-        clickedElement.style.backgroundImage = `url(${icons.explodedBomb})`;
+        clickedElement.classList.add(CLASSES.BOMB_EXPLODED);
       } else if (grid[row][col] === CELL_CONTENTS.EMPTY) {
-        clickedElement.style.backgroundImage = `url(${icons.bombs[0]})`;
+        cellEl.classList.add(`${CLASSES.BOMB_COUNT}-${cell.adjacentBombsCount}`);
         this._uncoverAllContinuousBlankCells(row, col);
       } else {
-        clickedElement.style.backgroundImage = `url(${icons.blank})`;
+        cellEl.classList.add(CLASSES.OPENED_BLANK_CELL);
       }
     });
 
@@ -61,7 +62,7 @@ class DomHandler {
       if (!clickedElement.classList.contains(CLASSES.CELL)) {
         return;
       }
-      clickedElement.style.backgroundImage = `url(${icons.pressed})`;
+      cellEl.classList.add(CLASSES.CELL_PRESSED);
     });
   }
 
