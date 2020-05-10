@@ -84,25 +84,18 @@ class DomHandler {
   }
 
   _cellClickPressed(event) {
-    event.preventDefault();
-
     const clickedElement = event.target;
-    if (!clickedElement.classList.contains(CLASSES.CELL)) {
+    if (event.button === MOUSE_BUTTON_CLICK.RIGHT || !clickedElement.classList.contains(CLASSES.CELL)) {
       return false;
     }
 
-    if (event.button === MOUSE_BUTTON_CLICK.RIGHT) {
-      clickedElement.classList.add(CLASSES.FLAGGED);
-      return false;
-    }
     clickedElement.classList.add(CLASSES.CELL_PRESSED);
   }
   _cellClickReleased(event) {
-    event.preventDefault();
-
     const clickedElement = event.target;
-    if (!clickedElement.classList.contains(CLASSES.CELL)) {
-      return;
+
+    if (event.button === MOUSE_BUTTON_CLICK.RIGHT || !clickedElement.classList.contains(CLASSES.CELL)) {
+      return false;
     }
     clickedElement.classList.remove(CLASSES.CELL_PRESSED);
     const { row, col } = clickedElement.dataset;
@@ -117,10 +110,22 @@ class DomHandler {
       this._openCellsWithAdjacentBombs(clickedElement, cell);
     }
   }
+  _flaggCell(event) {
+    event.preventDefault();
+    const clickedElement = event.target;
+    if (!clickedElement.classList.contains(CLASSES.CELL)) {
+      return false;
+    }
+    if (event.button === MOUSE_BUTTON_CLICK.RIGHT) {
+      clickedElement.classList.toggle(CLASSES.FLAGGED);
+    }
+    return false;
+  }
 
   _setUpEventHandlers() {
     this.gameRootElement.addEventListener('mouseup', this._cellClickReleased.bind(this));
     this.gameRootElement.addEventListener('mousedown', this._cellClickPressed.bind(this));
+    this.gameRootElement.addEventListener('contextmenu', this._flaggCell.bind(this));
     this.restartGameButton.addEventListener('click', (e) => location.reload());
   }
 
