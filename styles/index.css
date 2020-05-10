@@ -81,6 +81,10 @@ body {
   background-image: url(http://i.imgur.com/lJ8P1wab.jpg);
 }
 
+.flagged {
+  background-image: url(http://i.imgur.com/nLPvW15b.jpg);
+}
+
 #game-over-modal {
   position: absolute;
   z-index: 1;

@@ -1,5 +1,6 @@
 class DomHandler {
   game = null;
+  domElementsGrid = null;
   gameRootElement = document.getElementById('minesweeper-app');
   minesBanner = document.getElementById('number-of-mines-banner');
   gameOverModal = document.getElementById('game-over-modal');
@@ -8,10 +9,19 @@ class DomHandler {
 
   constructor(game) {
     this.game = game;
-    this.minesBanner.textContent = `Number of mines: ${this.game.numberOfMines}`;
+    this.minesBanner.textContent = `Number of mines: ${game.numberOfMines}`;
+    this._setUpDomElementsGrid();
     this._addGridToDom();
     this._setUpEventHandlers();
-    console.log(this.game);
+  }
+  _setUpDomElementsGrid() {
+    /* Sets up a grid that will miror the game grid
+     * except it will contain the actual dom elements
+     * so we don't have to query for them each time
+     * we want to change their visual representation.
+     */
+    const { gridSize } = this.game;
+    this.domElementsGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
   }
 
   __exposeBombsForTestingPurposes(cell, cellEl) {
@@ -43,8 +53,9 @@ class DomHandler {
         cellEl.className = CLASSES.CELL;
         cellEl.setAttribute('data-row', rowIndex);
         cellEl.setAttribute('data-col', colIndex);
-        // this.__exposeBombsForTestingPurposes(cell, cellEl);
+        this.domElementsGrid[rowIndex][colIndex] = cellEl;
         rowEl.appendChild(cellEl);
+        // this.__exposeBombsForTestingPurposes(cell, cellEl);
       });
     });
 
@@ -73,13 +84,22 @@ class DomHandler {
   }
 
   _cellClickPressed(event) {
+    event.preventDefault();
+
     const clickedElement = event.target;
     if (!clickedElement.classList.contains(CLASSES.CELL)) {
-      return;
+      return false;
+    }
+
+    if (event.button === MOUSE_BUTTON_CLICK.RIGHT) {
+      clickedElement.classList.add(CLASSES.FLAGGED);
+      return false;
     }
     clickedElement.classList.add(CLASSES.CELL_PRESSED);
   }
   _cellClickReleased(event) {
+    event.preventDefault();
+
     const clickedElement = event.target;
     if (!clickedElement.classList.contains(CLASSES.CELL)) {
       return;
@@ -110,7 +130,7 @@ class DomHandler {
     /* For performance reasons we want to perform
      * DFS on our in-memory grid, and not on DOM directly.
      * Once we land on empty cell, we update its corresponding
-     * "twin" in the DOM, based on their shared coordinates.
+     * "twin" in the DOM, based on their shared in this.domElementsGrid.
      */
     const DFS = (row, col) => {
       console.log(row, col);
@@ -119,7 +139,7 @@ class DomHandler {
         return;
       }
 
-      const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+      const cellElement = this.domElementsGrid[row][col];
 
       if (cell.hasAdjacentBombs()) {
         this._openCellsWithAdjacentBombs(cellElement, cell);
