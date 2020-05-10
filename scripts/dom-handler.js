@@ -36,7 +36,23 @@ class DomHandler {
     } else {
       this.gameOverStatusMessage.textContent = 'Nice work! You win!';
     }
+    this._uncoverAllCellsOnGameOver();
     this.gameOverModal.classList.remove(CLASSES.HIDE);
+  }
+  _uncoverAllCellsOnGameOver() {
+    for (let row = 0; row < this.domElementsGrid.length; row++) {
+      for (let col = 0; col < this.domElementsGrid[row].length; col++) {
+        let domCell = this.domElementsGrid[row][col];
+        let inMemoryCell = this.game.grid[row][col];
+        if (inMemoryCell.isBomb()) {
+          domCell.classList.add(CLASSES.BOMB_EXPOSED);
+        } else if (!inMemoryCell.hasAdjacentBombs() && !inMemoryCell.isBomb()) {
+          domCell.classList.add(CLASSES.OPENED_BLANK_CELL);
+        } else if (inMemoryCell.hasAdjacentBombs()) {
+          domCell.classList.add(`${CLASSES.BOMB_COUNT}-${inMemoryCell.adjacentBombsCount}`);
+        }
+      }
+    }
   }
 
   _addGridToDom() {
@@ -55,7 +71,7 @@ class DomHandler {
         cellEl.setAttribute('data-col', colIndex);
         this.domElementsGrid[rowIndex][colIndex] = cellEl;
         rowEl.appendChild(cellEl);
-        // this.__exposeBombsForTestingPurposes(cell, cellEl);
+        this.__exposeBombsForTestingPurposes(cell, cellEl);
       });
     });
 
@@ -64,22 +80,32 @@ class DomHandler {
 
   _openCellWithABomb(clickedElement, cell) {
     clickedElement.classList.add(CLASSES.BOMB_EXPLODED);
-    this._openACell(cell);
+    this._openInMemoryCell(cell);
     this._gameOver(true);
   }
   _openCellsWithAdjacentBombs(clickedElement, cell) {
     clickedElement.classList.add(`${CLASSES.BOMB_COUNT}-${cell.adjacentBombsCount}`);
-    this._openACell(cell);
+    this._openInMemoryCell(cell);
   }
   _openBlankCellsWithoutAdjacentBombs(clickedElement, row, col) {
     clickedElement.classList.add(CLASSES.OPENED_BLANK_CELL);
     this._uncoverAllAdjacentBlankCells(row, col);
   }
 
-  _openACell(cell) {
+  _openInMemoryCell(cell) {
     this.game.openCell(cell);
     if (this.game.checkForWin()) {
       this._gameOver(false);
+    }
+  }
+
+  _openDomCell(clickedElement, cell, row, col) {
+    if (cell.isBomb()) {
+      this._openCellWithABomb(clickedElement, cell);
+    } else if (!cell.hasAdjacentBombs() && !cell.isBomb()) {
+      this._openBlankCellsWithoutAdjacentBombs(clickedElement, row, col);
+    } else if (cell.hasAdjacentBombs()) {
+      this._openCellsWithAdjacentBombs(clickedElement, cell);
     }
   }
 
@@ -101,14 +127,7 @@ class DomHandler {
     const { row, col } = clickedElement.dataset;
     const { grid } = this.game;
     const cell = grid[row][col];
-
-    if (cell.isBomb()) {
-      this._openCellWithABomb(clickedElement, cell);
-    } else if (!cell.hasAdjacentBombs() && !cell.isBomb()) {
-      this._openBlankCellsWithoutAdjacentBombs(clickedElement, row, col);
-    } else if (cell.hasAdjacentBombs()) {
-      this._openCellsWithAdjacentBombs(clickedElement, cell);
-    }
+    this._openDomCell(clickedElement, cell, row, col);
   }
   _flaggCell(event) {
     event.preventDefault();
@@ -138,6 +157,7 @@ class DomHandler {
      * "twin" in the DOM, based on their shared in this.domElementsGrid.
      */
     const DFS = (row, col) => {
+      debugger;
       console.log(row, col);
       const cell = grid[row] ? grid[row][col] : undefined;
       if (!cell || cell.isVisited()) {
@@ -151,7 +171,7 @@ class DomHandler {
         return;
       }
 
-      this._openACell(cell);
+      this._openInMemoryCell(cell);
 
       cellElement.classList.add(CLASSES.OPENED_BLANK_CELL);
 
