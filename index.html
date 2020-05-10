@@ -3,24 +3,64 @@
   <head>
     <meta charset="utf-8" />
     <title>Minesweeper</title>
+
     <link rel="stylesheet" href="./styles/index.css" />
-    <script src="./scripts/icons.js"></script>
-    <script src="./scripts/constants.js"></script>
-    <script src="./scripts/minesweeper.js"></script>
-    <script src="./scripts/solvers.js"></script>
-    <script src="./scripts/dom-handler.js"></script>
+
+    <script src="./scripts/game/minesweeper.js"></script>
+    <script src="./scripts/game/solver.js"></script>
+
+    <script src="./scripts/dom-handler/constants.js"></script>
+    <script src="./scripts/dom-handler/game-state.js"></script>
+    <script src="./scripts/dom-handler/events-handler.js"></script>
+    <script src="./scripts/dom-handler/dom-setup.js"></script>
+
     <script src="./scripts/index.js"></script>
   </head>
   <body>
     <h1>Minesweeper</h1>
     <h3 id="number-of-mines-banner"></h3>
-    <div id="minesweeper-app"></div>
+    <section class="game">
+      <section class="game-instructions">
+        <p>Welcome to Minesweeper!</p>
+        <p>There are mines hidden throughout the board. If you click on a mine, it will explode, and that's game over.</p>
+        <p>Your goal is to uncover all the "safe" fields. Once all the fields without bombs have been uncovered, you win the game.</p>
+        <p>
+          Left-click on the field will open/uncover the field, right-click will flag the field. You can use the flag if you suspect there is a bomb on
+          a particular field.
+        </p>
+        <p>
+          If a field has adjacent bombs (immediate neighbor cells in all directions), you will see a number. The number tells you exactly how many
+          adjacent cells are bombs.
+        </p>
+        <p>
+          If you click on a blank/safe field without adjacent bombs, it will uncover all continuous safe fields, until it reaches cells that have
+          adjacent bombs.
+        </p>
+        <p>
+          To play automatic solvers, click the button below. Solvers will play the game 100,000 times, and you will see how many times the game was
+          won!
+          <button id="start-solvers" class="button">Play game automatically 100,000 times!</button>
+        </p>
+      </section>
+      <div id="minesweeper-app"></div>
+    </section>
 
-    <div id="game-over-modal" class="hide">
+    <div id="game-over-modal" class="modal hide">
       <div class="modal-content">
         <h1>Game over</h1>
         <h3 id="game-over-status"></h3>
-        <button id="restart-game">Try again!</button>
+        <button id="restart-game" class="button">Try again!</button>
+      </div>
+    </div>
+
+    <div id="solvers-modal" class="modal hide">
+      <div class="modal-content">
+        <div class="loader hide"></div>
+        <section id="solvers-results" class="hide">
+          <h1>Automatic solvers complete!</h1>
+          <p>Automatic solvers have won <span id="solvers-wins-counter"></span> out of 100,000 attempts!</p>
+          <p>Reload page to play again!</p>
+        </section>
       </div>
     </div>
   </body>
