@@ -1,0 +1,30 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "To run tests in your browser, simply open tests.html file",
+  "main": "index.js",
+  "directories": {
+    "test": "tests",
+    "start": "forever server.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kcejic38/minesweeper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kcejic38/minesweeper/issues"
+  },
+  "homepage": "https://github.com/kcejic38/minesweeper#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "forever": "^2.0.0",
+    "nodemon": "^2.0.4"
+  }
+}

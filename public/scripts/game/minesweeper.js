@@ -104,7 +104,7 @@ class Minesweeper {
     if (cell.hasAdjacentBombs()) {
       cell.openField();
       this.numberOfVisitedCells++;
-      domHandlerCb(row, col, true);
+      domHandlerCb(row, col, false);
       return cell.adjacentBombsCount;
     }
 

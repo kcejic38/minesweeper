@@ -47,6 +47,7 @@ class GameState {
   }
 
   gameOver(steppedOnAMine) {
+    debugger;
     if (steppedOnAMine) {
       this.gameOverStatusMessage.textContent = 'You stepped on a mine!';
     } else {
