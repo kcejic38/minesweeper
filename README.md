@@ -1,3 +1,3 @@
 # minesweeper
 
-To run tests in your browser, simply open tests.html file
+To access this app navigate to [https://katarinas-minesweeper.herokuapp.com/](https://katarinas-minesweeper.herokuapp.com/)
